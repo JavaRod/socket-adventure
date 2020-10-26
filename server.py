@@ -111,9 +111,11 @@ class Server(object):
         :return: None
         """
 
-        # TODO: YOUR CODE HERE
+        received = b''
+        while b'\n' not in received:
+            received += self.client_connection.read(16)
 
-        pass
+        self.input_buffer = received.decode()
 
     def move(self, argument):
         """
