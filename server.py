@@ -113,9 +113,9 @@ class Server(object):
 
         received = b''
         while b'\n' not in received:
-            received += self.client_connection.read(16)
+            received += self.client_connection.recv(16)
 
-        self.input_buffer = received.decode()
+        self.input_buffer = received.decode().strip('\n')
 
     def move(self, argument):
         """
@@ -137,7 +137,8 @@ class Server(object):
         :param argument: str
         :return: None
         """
-
+        print('Room: ' + str(self.room))
+        print('Direction: ' + argument)
         if self.room == 0:
             if argument == 'north':
                 self.room = 3
@@ -145,8 +146,10 @@ class Server(object):
                 self.room = 1
             elif argument == 'east':
                 self.room = 2
-        elif argument is 'east' or argument is 'west' or argument is 'south':
+        elif argument == 'east' or argument == 'west' or argument == 'south':
             self.room = 0
+
+        self.output_buffer = self.room_description(self.room)
 
     def say(self, argument):
         """
@@ -168,15 +171,13 @@ class Server(object):
         """
         Quits the client from the server.
 
-        Turns `self.done` to True and puts "Goodbye!" onto the output buffer.
+        Turns `self.done` to True and puts "Aloha!" onto the output buffer.
 
         Ignore the argument.
 
         :param argument: str
         :return: None
         """
-
-        # TODO: YOUR CODE HERE
 
         self.done = True
         self.output_buffer = "Aloha!"
@@ -193,9 +194,22 @@ class Server(object):
         :return: None
         """
 
-        # TODO: YOUR CODE HERE
+        received = self.input_buffer.split(" ")
 
-        pass
+        command = received.pop(0)
+        arguments = " ".join(received)
+
+        # If `self.input_buffer` was "say Is anybody here?", then:
+        # `command` should now be "say" and `arguments` should now be "Is anybody here?".
+        #
+        # If `self.input_buffer` was "move north", then:
+        # `command` should now be "move" and `arguments` should now be "north".
+
+        {
+            'quit': self.quit,
+            'move': self.move,
+            'say': self.say,
+        }[command](arguments)
 
     def push_output(self):
         """

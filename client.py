@@ -18,8 +18,13 @@ client_socket.connect((host, port))
 while True:
     try:
         response = client_socket.recv(4096).decode()
-    except ConnectionAbortedError:
+        print('respone:' + response)
+    except (ConnectionAbortedError, ConnectionResetError):
         print("Connection closed by host.")
+        break
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        raise
         break
 
     print(response)
