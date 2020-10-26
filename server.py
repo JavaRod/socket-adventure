@@ -138,9 +138,15 @@ class Server(object):
         :return: None
         """
 
-        # TODO: YOUR CODE HERE
-
-        pass
+        if self.room == 0:
+            if argument == 'north':
+                self.room = 3
+            elif argument == 'west':
+                self.room = 1
+            elif argument == 'east':
+                self.room = 2
+        elif argument is 'east' or argument is 'west' or argument is 'south':
+            self.room = 0
 
     def say(self, argument):
         """
